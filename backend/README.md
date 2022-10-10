@@ -57,11 +57,13 @@ On success, you can open the application on your web browser via http://127.0.0.
 
 ### `/admin`
 
-You can navigate to http://127.0.0.1:8000/admin on your browser to access
-the administration page. Here you can view and edit the current database. You will need to login with your
-superuser account. To make an account run the below in the terminal:
+You can navigate to http://127.0.0.1:8000/admin on your browser to access the administration page. Here you can view and edit the current database. You will need to login with your superuser account. To make an account run the below in the terminal:
 
     python manage.py createsuperuser
+
+### `/api/v1/`
+
+This is the API root of all endpoints.
 
 ---       
 
@@ -91,7 +93,6 @@ To edit the database, follow these steps.
 
 ## Updating Dependencies
 
-If you have made changes to the code such that there is a new dependency (i.e. you ran `pip install <dependency>`), 
-please update the `requirements.txt` file with the below command:
+If you have made changes to the code such that there is a new dependency (i.e. you ran `pip install <dependency>`), please update the `requirements.txt` file with the below command:
 
     pip freeze > requirements.txt
