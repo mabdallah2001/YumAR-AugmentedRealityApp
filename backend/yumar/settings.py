@@ -75,8 +75,12 @@ WSGI_APPLICATION = "yumar.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'YUMAR',
+        'USER': 'admin',
+        'PASSWORD': 'admin123',
+        'HOST': 'yumar-database.cvxhiphm6puo.ap-southeast-2.rds.amazonaws.com',
+        'PORT': '3306',
     }
 }
 
