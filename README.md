@@ -1,31 +1,13 @@
-# README #
+# YumAR
 
-This README would normally document whatever steps are necessary to get your application up and running.
+YumAR is a website allowing restaurant customers to visualise menu items in Augmented Reality (AR).
 
-### What is this repository for? ###
+## Application Server (Backend)
+The backend "application server" is a Django application, located in the `backend` directory.
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+    cd backend/
 
-### How do I get set up? ###
+## Web Server (Frontend)
+The front "web server" is a React application, located in the `frontend` directory.
 
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
-
-### Contribution guidelines ###
-
-* Writing tests
-* Code review
-* Other guidelines
-
-### Who do I talk to? ###
-
-* Repo owner or admin
-* Other community or team contact
-=======
-# yumAR
+    cd frontend/
