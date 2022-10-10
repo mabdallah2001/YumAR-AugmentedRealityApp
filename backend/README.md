@@ -1,5 +1,39 @@
 # YumAR: Backend
 
+This Django backend was set up following [these instructions](https://docs.djangoproject.com/en/4.1/intro/tutorial01/).
+
+## Directory Structure
+
+### `app/`
+
+* admin.py: This is where you register your database models.
+
+* apps.py: This is where you configure the app.
+
+* models.py: This is where you create your database models.
+
+* tests.py: This is where you write tests for your models.
+
+* urls.py: This is where we route URLs to certain views (API endpoints)
+
+* views.py: This is where you can create API endpoints to retrieve data.
+
+### `yumar/`
+
+* asgi.py: Entry point for ASGI-compatible web servers.
+
+* settings.py: Settings/configurations for this project.
+
+* urls.py: The URL declarations for this project.
+
+* wsgi.py: Entry point for WSGI-compatible web servers.
+
+### `manage.py`
+
+This is a command-line utility allowing us to interact with the project.
+
+---
+
 ## Set up
 
 1. Ensure your Python version is >= 3:
@@ -35,29 +69,23 @@ superuser account. To make an account run the below in the terminal:
 
 To edit the database, follow these steps.
 
-1. Make changes to the model(s) in models.py of a particular app
-1. Run the below to create migrations for those changes
+1. Make changes to the model(s) in `app/models.py`
 
-    ```
-    python manage.py makemigrations [appname]
-    ```
-1. You may run the below to review the sql that Django believes is necessary for the changes 
+2. Run the below to create migrations for those changes
+    
+        python manage.py makemigrations app
 
-    ```
-    python manage.py sqlmigrate [appname] [migration number]
-    ```
-1. Once you are satisfied with the changes, run the below to make the changes
+3. You may run the below to review the sql that Django believes is necessary for the changes 
 
-    ```
-    python manage.py migrate
-    ```
-   
-1. If you would like to include the model to be viewed and edited in the admin page, add the below code to
-`[app]/admin.py`
+        python manage.py sqlmigrate app [migration number]
 
-    ```
-    admin.site.register(ModelName)
-    ```
+4. Once you are satisfied with the changes, run the below to make the changes
+
+        python manage.py migrate
+
+5. If you would like to include the model to be viewed and edited in the admin page, add the below code to `app/admin.py`
+
+        admin.site.register(ModelName)
 
 ---
 
