@@ -1,3 +1,57 @@
+from email.policy import default
 from django.db import models
+from django.db.models import SET_NULL
+from django.core.validators import MinValueValidator
 
 # Create your models here.
+
+'''
+Note: the attributes commented out below have been done so because order of creation matters
+      (e.g. you cannot have 'menu' in Restaurant if the Menu class hasn't been created yet).
+      However, there are still links between the models in question, it is just unidirectional,
+      not bidirectional.
+'''
+
+class Restaurant(models.Model):
+    name = models.CharField(max_length=100, blank=False)
+    cuisine = models.CharField(max_length=100, blank=False)
+    # staff_list = models.ManyToManyField(KitchenStaff'staff')
+    # admin_list = models.ManyToManyField(RestaurantAdmin'admin')
+    # menu = models.ForeignKey(Menu, on_delete=SET_NULL, default=None, null=True)
+
+class KitchenStaff(models.Model):
+    username = models.CharField(max_length=100, blank=False)
+    restaurant = models.ForeignKey(Restaurant, on_delete=SET_NULL, default=None, null=True)
+
+class RestaurantAdmin(models.Model):
+    username = models.CharField(max_length=100, blank=False)
+    restaurant = models.ForeignKey(Restaurant, on_delete=SET_NULL, default=None, null=True)
+
+class Category(models.Model):
+    # menu = models.ForeignKey(Menu, on_delete=SET_NULL, default=None, null=True)
+    name = models.CharField(max_length=100, blank=False)
+    # menu_items_list = models.ManyToManyField(MenuItem])
+
+class MenuItem(models.Model):
+    category = models.ForeignKey(Category, on_delete=SET_NULL, default=None, null=True)
+    name = models.CharField(max_length=100, blank=False)
+    price = models.FloatField(validators=[MinValueValidator(0.0)])
+    link_3d_model = models.CharField(max_length=100, blank=False)
+
+class Menu(models.Model):
+    menu_items = models.ManyToManyField(MenuItem)
+    category_list = models.ManyToManyField(Category)
+    restaurant = models.ForeignKey(Restaurant, on_delete=SET_NULL, default=None, null=True)
+
+class Order(models.Model):
+    order_number = models.IntegerField(validators=[MinValueValidator(0)])
+    menu_items = models.ManyToManyField(MenuItem)
+    time_created = models.TimeField()
+    total = models.FloatField(validators=[MinValueValidator(0.0)])
+    is_completed = models.BooleanField(default=False)
+    restaurant = models.ForeignKey(Restaurant, on_delete=SET_NULL, default=None, null=True)
+
+class Customer(models.Model):
+    orders = models.ManyToManyField(Order)
+    table_number = models.IntegerField(validators=[MinValueValidator(0)])
+    # customer_id automatically set by Django (as _id field)
