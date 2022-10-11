@@ -15,17 +15,13 @@ Note: the attributes commented out below have been done so because order of crea
 class Restaurant(models.Model):
     name = models.CharField(max_length=100, blank=False)
     cuisine = models.CharField(max_length=100, blank=False)
-    # staff_list = models.ManyToManyField(KitchenStaff'staff')
-    # admin_list = models.ManyToManyField(RestaurantAdmin'admin')
+    # staff_list = models.ManyToManyField(Staff)
     # menu = models.ForeignKey(Menu, on_delete=SET_NULL, default=None, null=True)
 
-class KitchenStaff(models.Model):
+class Staff(models.Model):
     username = models.CharField(max_length=100, blank=False)
     restaurant = models.ForeignKey(Restaurant, on_delete=SET_NULL, default=None, null=True)
-
-class RestaurantAdmin(models.Model):
-    username = models.CharField(max_length=100, blank=False)
-    restaurant = models.ForeignKey(Restaurant, on_delete=SET_NULL, default=None, null=True)
+    is_admin = models.BooleanField(default=False)
 
 class Category(models.Model):
     # menu = models.ForeignKey(Menu, on_delete=SET_NULL, default=None, null=True)
