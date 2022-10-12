@@ -34,21 +34,47 @@ This is a command-line utility allowing us to interact with the project.
 
 ---
 
-## Set up
+## Set Up - Python Virtual Environment
 
-1. Ensure your Python version is >= 3:
+All backend development will be done within a python virtual environment, setup as the following:
 
-        python --version
+1. Create a new environment with the below command. Replace `[path]` with the path of where you would like to store the environment.
 
-2. Install all dependencies:
+        python -m venv [path]
+
+   For example - create it in the current (backend) directory:
+
+        python -m venv `pwd`/yumar-env
+
+2. Activate the environment:
+
+        source [path]/bin/activate
+
+   Using our example:
+
+        source yumar-env/bin/activate
+
+3. Install all dependencies:
 
         pip install -r requirements.txt
 
----        
+---      
+
+## Activate Python Virtual Environment
+
+Once you have completed the [setup](#set-up---python-virtual-environment), you can activate the virtual environment with the following command:
+
+    source [path]/bin/activate
+
+All development is to be completed in this virtual environment. When you are finished development, deactivate the virtual environment with the following command:
+
+    deactivate
+
+--- 
 
 ## Running the Server
 
-To start the server, run the following command:
+To start the server, run the following command in your python virtual environment:
 
     python manage.py runserver
 
@@ -73,15 +99,15 @@ To edit the database, follow these steps.
 
 1. Make changes to the model(s) in `app/models.py`
 
-2. Run the below to create migrations for those changes
+2. Run the below command in your python virtual environment to create migrations for those changes
     
         python manage.py makemigrations app
 
-3. You may run the below to review the sql that Django believes is necessary for the changes 
+3. You may run the below command in your python virtual environment to review the sql that Django believes is necessary for the changes 
 
         python manage.py sqlmigrate app [migration number]
 
-4. Once you are satisfied with the changes, run the below to make the changes
+4. Once you are satisfied with the changes, run the below command in your python virtual environment to make the changes
 
         python manage.py migrate
 
@@ -93,6 +119,6 @@ To edit the database, follow these steps.
 
 ## Updating Dependencies
 
-If you have made changes to the code such that there is a new dependency (i.e. you ran `pip install <dependency>`), please update the `requirements.txt` file with the below command:
+If you have made changes to the code such that there is a new dependency (i.e. you ran `pip install <dependency>`), please update the `requirements.txt` file by running the below command in your python virtual environment:
 
     pip freeze > requirements.txt
