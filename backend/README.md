@@ -54,7 +54,7 @@ All backend development will be done within a python virtual environment, setup 
 
         source yumar-env/bin/activate
 
-3. Install all dependencies:
+3. Install all dependencies (note: you must have mysql installed on your machine for `mysqlclient` to properly install):
 
         pip install -r requirements.txt
 
