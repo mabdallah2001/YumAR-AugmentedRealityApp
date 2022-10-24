@@ -1,7 +1,6 @@
 import { Box, Grid, Typography, Container, Card, CardContent, TextField } from "@mui/material";
-import { FC } from "react";
 
-export const OrderPage: FC = () => {
+export const OrderPage = () => {
   return <Container>
    <Grid item mt={10} textAlign="center">
     <Box
