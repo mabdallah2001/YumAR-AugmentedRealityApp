@@ -6,7 +6,7 @@ from .models import Restaurant
 
 # Create your views here.
 
-from models import MenuItem
+from .models import MenuItem
 
 @require_http_methods(['GET'])
 def get_menu_items(request):
