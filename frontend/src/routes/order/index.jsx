@@ -6,17 +6,24 @@ import InputLabel from '@mui/material/InputLabel';
 import React from 'react';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {useState, useEffect} from "react"
+import { useNavigate } from "react-router-dom";
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 
 
 
 
 export const OrderPage = () => {
+
+  const navigate = useNavigate();
+
 
   const dummyData = [
     {
@@ -60,6 +67,13 @@ export const OrderPage = () => {
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const handleSubmit = () => {
+    setTimeout(() => {
+      alert("Order placed successfully")
+      navigate("/")
+    }, 1250);
   };
 
 
@@ -142,8 +156,12 @@ export const OrderPage = () => {
           </Button>
         </DialogActions>
       </Dialog>
-      <Grid item textAlign={"end"} mt={8} mb={10}>
-      <Button variant="outlined">Place Order</Button>
+      <Grid item textAlign={"end"} mt={8}>
+        <Typography fontSize={18} >Total</Typography>
+        <Typography fontSize={19}>$ 68.85</Typography>
+      </Grid>
+      <Grid item textAlign={"end"} mt={4} mb={10}>
+        <Button variant="outlined" onClick={() => handleSubmit()}>Place Order</Button>
       </Grid>
   </Container>
 };
