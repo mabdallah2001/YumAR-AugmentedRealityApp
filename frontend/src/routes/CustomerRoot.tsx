@@ -1,49 +1,22 @@
-import { BottomNavigation, BottomNavigationAction, Paper } from "@mui/material";
-import { FC, useState } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
-import { MdRestaurantMenu, MdOutlineShoppingCart } from "react-icons/md";
+import { FC } from "react";
+import { Outlet, useLoaderData } from "react-router-dom";
+import { BottomMenu } from "../components/BottomMenu";
+import { IUser } from "../main";
 
-const mapIndexToRoute = (index: number) => {
-  switch (index) {
-    case 0:
-      return "/";
-    case 1:
-      return "/order";
-  }
-  return "";
-};
-
-const BottomMenu: FC = () => {
-  const [value, setValue] = useState(0);
-  const navigate = useNavigate();
-  return (
-    <Paper
-      sx={{ position: "fixed", bottom: 0, left: 0, right: 0 }}
-      elevation={3}
-    >
-      <BottomNavigation
-        showLabels
-        value={value}
-        onChange={(_, newValue) => {
-          setValue(newValue);
-          navigate(mapIndexToRoute(newValue));
-        }}
-      >
-        <BottomNavigationAction label="Menu" icon={<MdRestaurantMenu />} />
-        <BottomNavigationAction
-          label="Order"
-          icon={<MdOutlineShoppingCart />}
-        />
-      </BottomNavigation>
-    </Paper>
-  );
-};
+interface ILoaderType {
+  path: string;
+  user: IUser;
+}
 
 export const CustomerRoot: FC = () => {
+  const { path, user } = useLoaderData() as ILoaderType;
+
+  console.log(user);
+
   return (
     <div className="App">
       <Outlet />
-      <BottomMenu />
+      <BottomMenu initialPath={path} user={user} />
     </div>
   );
 };
