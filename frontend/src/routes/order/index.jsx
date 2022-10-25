@@ -34,7 +34,7 @@ export const OrderPage = () => {
     {
       id: 3,
       name: "Tandoori Pizza",
-      description: "Tender pieces of chicken breast marinated tandoori style. With Spanish onions, sweet potato, cashew nuts and mozzarella cheese, topped with mango chutney, minted yoghurt and coriander.",
+      description: "Tender pieces of chicken breast marinated tandoori style.",
       price: 19.95
     }
   ]
@@ -49,14 +49,13 @@ export const OrderPage = () => {
   };
 
   const handleDelete = (menuItem) => {
-    // setData((prevState) => prevState.filter((item) => item.id !== menuItem));
+    setData((prevState) => prevState.filter((item) => item.id !== menuItem));
     setOpen(false);
-    alert("deleted successfully");
   }
 
-  const handleClickOpen = () => {
+  const handleClickOpen = (item) => {
     setOpen(true);
-    // setDeleteID(item);
+    setDeleteID(item);
   };
 
   const handleClose = () => {
@@ -83,7 +82,8 @@ export const OrderPage = () => {
         Your order
       </Typography>
     </Grid>
-    <Grid item mt={10} ml={10}>
+    {data.map((item, idx) => (
+    <Grid item mt={10} ml={10} key={idx}>
     <Card sx={{ minWidth: 275 }}>
       <CardContent>
         <Grid container>
@@ -107,20 +107,20 @@ export const OrderPage = () => {
             </FormControl>
           </Grid>
           <Grid item ml={5}>
-            <Typography fontWeight={"bold"}>Aussie Sunrise</Typography>
-            <Typography mt={0.5}>Two buttermilk pancakes with whipped butter, bacon, an egg and grilled banana and pineapple.</Typography>
+            <Typography fontWeight={"bold"}>{item.name}</Typography>
+            <Typography mt={0.5}>{item.description}</Typography>
           </Grid>
-          <Grid item textAlign={"end"} justifyContent="end" alignContent={"end"} xs={2.5}>
-            <div onClick={() => handleClickOpen()}>
+          <Grid item textAlign={"end"} justifyContent="end" alignContent={"end"} xs={100} my={-10}>
+            <div onClick={() => handleClickOpen(item.id)}>
               <DeleteIcon/>
             </div>
-            <Typography>$ 19.90</Typography>
+            <Typography mt={1}>$ {item.price}</Typography>
           </Grid>
         </Grid>
       </CardContent>
     </Card>
     </Grid>
-
+    ))}
     <Dialog
         open={open}
         onClose={handleClose}
@@ -137,11 +137,13 @@ export const OrderPage = () => {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={() => handleDelete()} autoFocus>
+          <Button onClick={() => handleDelete(deleteID)} autoFocus>
             Delete
           </Button>
         </DialogActions>
       </Dialog>
-  
+      <Grid item textAlign={"end"} mt={8} mb={10}>
+      <Button variant="outlined">Place Order</Button>
+      </Grid>
   </Container>
 };
