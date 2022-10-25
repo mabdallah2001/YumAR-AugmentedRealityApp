@@ -1,6 +1,71 @@
-import { Box, Grid, Typography, Container, Card, CardContent, TextField } from "@mui/material";
+import { Box, Grid, Typography, Container, Card, CardContent, TextField, Button } from "@mui/material";
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import InputLabel from '@mui/material/InputLabel';
+import React from 'react';
+import DeleteIcon from '@mui/icons-material/Delete';
+import {useState, useEffect} from "react"
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+
+
+
+
 
 export const OrderPage = () => {
+
+  const dummyData = [
+    {
+      id: 1,
+      name: "Aussie Sunrise",
+      description: "Two buttermilk pancakes with whipped butter, bacon, an egg and grilled banana and pineapple.",
+      price: 16.95
+    },
+    {
+      id: 2,
+      name: "The Dawn",
+      description: "Hash brown with scrambled eggs, bacon and grilled pineapple.",
+      price: 15.95
+    },
+    {
+      id: 3,
+      name: "Tandoori Pizza",
+      description: "Tender pieces of chicken breast marinated tandoori style. With Spanish onions, sweet potato, cashew nuts and mozzarella cheese, topped with mango chutney, minted yoghurt and coriander.",
+      price: 19.95
+    }
+  ]
+
+  const [quantity, setQuantity] = React.useState(1);
+  const [data, setData] = useState(dummyData);
+  const [open, setOpen] = useState(false);
+  const [deleteID, setDeleteID] = useState()
+
+  const handleChange = (event) => {
+    setQuantity(event.target.value);
+  };
+
+  const handleDelete = (menuItem) => {
+    // setData((prevState) => prevState.filter((item) => item.id !== menuItem));
+    setOpen(false);
+    alert("deleted successfully");
+  }
+
+  const handleClickOpen = () => {
+    setOpen(true);
+    // setDeleteID(item);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+
+  
+
   return <Container>
    <Grid item mt={10} textAlign="center">
     <Box
@@ -21,11 +86,62 @@ export const OrderPage = () => {
     <Grid item mt={10} ml={10}>
     <Card sx={{ minWidth: 275 }}>
       <CardContent>
-        <TextField id="outlined-basic" label="hey" variant="outlined" />
-        <Typography>Hey</Typography>
+        <Grid container>
+          <Grid item>
+            <FormControl sx={{ m: 1, minWidth: 80 }}>
+              <InputLabel id="demo-simple-select-autowidth-label">Quantity</InputLabel>
+                <Select
+                  labelId="demo-simple-select-autowidth-label"
+                  id="demo-simple-select-autowidth"
+                  value={quantity}
+                  onChange={handleChange}
+                  autoWidth
+                  label="Quantity"
+                >
+                <MenuItem value={1}>1</MenuItem>
+                <MenuItem value={2}>2</MenuItem>
+                <MenuItem value={3}>3</MenuItem>
+                <MenuItem value={4}>4</MenuItem>
+                <MenuItem value={5}>5</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item ml={5}>
+            <Typography fontWeight={"bold"}>Aussie Sunrise</Typography>
+            <Typography mt={0.5}>Two buttermilk pancakes with whipped butter, bacon, an egg and grilled banana and pineapple.</Typography>
+          </Grid>
+          <Grid item textAlign={"end"} justifyContent="end" alignContent={"end"} xs={2.5}>
+            <div onClick={() => handleClickOpen()}>
+              <DeleteIcon/>
+            </div>
+            <Typography>$ 19.90</Typography>
+          </Grid>
+        </Grid>
       </CardContent>
     </Card>
     </Grid>
+
+    <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Delete menu item?"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Are you sure you want to delete this menu item? This is an irreversible operation.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={() => handleDelete()} autoFocus>
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
   
-  </Container>;
+  </Container>
 };
