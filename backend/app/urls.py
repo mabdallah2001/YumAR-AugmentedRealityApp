@@ -1,8 +1,8 @@
-from django.urls import path, re_path
-
-from . import views
+from django.urls import path
+from .views import *
 
 # Add URLS for endpoints located in views.py here
 urlpatterns = [
-    re_path(r'^menu/', views.get_menu_items),
+    path('example/', example_route),
+    path('menu/', get_menu_items)
 ]

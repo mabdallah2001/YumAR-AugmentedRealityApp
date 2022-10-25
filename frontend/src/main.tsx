@@ -17,6 +17,7 @@ import { NewCategoryPage } from "./routes/staff/category/new";
 import { NewItemPage } from "./routes/staff/item/new";
 import { StaffOrdersPage } from "./routes/staff/orders";
 import { StaffProfilePage } from "./routes/staff/profile";
+import { Example } from "./routes/example";
 
 const queryClient = new QueryClient();
 
@@ -41,6 +42,10 @@ const router = createBrowserRouter([
       {
         path: "/item/:itemId/ar",
         element: <ArPage />,
+      },
+      {
+        path: "/example",
+        element: <Example />,
       },
     ],
   },
