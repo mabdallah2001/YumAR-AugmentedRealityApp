@@ -18,3 +18,4 @@ We are using Vite to run and bundle the frontend
 - This project supports using Typescript or Javascript, so just use whatever you want.
     - To use Typescript name your react components files with .tsx or .jsx for javascript
     - Other non react code use .ts for Typescript and .js for javascript.
+- We are using [react-icons](https://react-icons.github.io/react-icons/) for adding icons
