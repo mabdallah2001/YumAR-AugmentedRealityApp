@@ -19,12 +19,20 @@ import { StaffOrdersPage } from "./routes/staff/orders";
 import { StaffProfilePage } from "./routes/staff/profile";
 import { Example } from "./routes/example";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: false,
+    },
+  },
+});
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <CustomerRoot />,
+    // TODO: create loader to check if user is staff so the CustomerRoot ccomponent renders different things
     errorElement: <div>Error page</div>, // TODO: create proper error page
     children: [
       {
