@@ -5,9 +5,9 @@ We are using Vite to run and bundle the frontend
 
 ## To develop do the following:
 
-1. Make sure you have all the libraries installed:
+1. Make sure you have all the libraries installed:  
 `npm install`
-2. Run the development server:
+2. Run the development server:  
 `npm run dev`
 
 
@@ -16,5 +16,5 @@ We are using Vite to run and bundle the frontend
 - We are using axios to do ajax requests. This goes inside the useQuery hook and you can take a look at the example in src/routes/example.jsx
 - We are using [Material UI](https://mui.com/material-ui/) as our component library, use it to implement your UI.
 - This project supports using Typescript or Javascript, so just use whatever you want.
-  - To use Typescript name your react components files with .tsx or .jsx for javascript
-  - Other non react code use .ts for Typescript and .js for javascript.
+    - To use Typescript name your react components files with .tsx or .jsx for javascript
+    - Other non react code use .ts for Typescript and .js for javascript.
