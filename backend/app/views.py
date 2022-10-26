@@ -13,8 +13,7 @@ from .models import MenuItem
 @require_http_methods(['GET'])
 def get_menu_items(request):
     data_json = serializers.serialize("json", MenuItem.objects.all())
-    data = {"menu": data_json}
-    return JsonResponse(data, safe=False, status=200)
+    return JsonResponse(data_json, safe=False, status=200)
 
 @require_http_methods(['GET'])
 def example_route(request):
