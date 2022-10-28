@@ -24,6 +24,11 @@ export const OrderPage = () => {
 
   const navigate = useNavigate();
 
+  // useEffect(() => {
+  //   if (data === null || data.length === 0){
+  //     setFlag(false);
+  //   }
+  // },[]); 
 
   const dummyData = [
     {
