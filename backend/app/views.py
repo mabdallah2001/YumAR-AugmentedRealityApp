@@ -6,6 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
 from django.http import JsonResponse
+from .models import Restaurant,MenuItem
 from django.core import serializers;
 
 from .models import Restaurant, MenuItem
@@ -24,6 +25,11 @@ def example_route(request):
     return JsonResponse(data, safe=False, status=200)
 
 @require_http_methods(['GET'])
+def get_menu_item(request,id):
+    data = list(MenuItem.objects.filter(id=id).values())
+    print (data)
+    return JsonResponse(data, safe=False, status=200)
+
 @login_required
 def whoami(request):
     return JsonResponse({"username": request.user.username, "is_admin": request.user.staff.is_admin})
