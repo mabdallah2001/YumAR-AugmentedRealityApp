@@ -18,6 +18,7 @@ import { NewItemPage } from "./routes/staff/item/new";
 import { StaffOrdersPage } from "./routes/staff/orders";
 import { StaffProfilePage } from "./routes/staff/profile";
 import { Example } from "./routes/example";
+import axios from "axios";
 
 const queryClient = new QueryClient();
 
@@ -37,6 +38,12 @@ const router = createBrowserRouter([
       },
       {
         path: "/item/:itemId",
+        loader: async ({params}) => {
+          let res = await axios.get(`/api/v1/item/${params.itemId}`, {
+            params: { id: 2 }
+          });
+          return res.data;
+        },
         element: <ItemDetailsPage />,
       },
       {

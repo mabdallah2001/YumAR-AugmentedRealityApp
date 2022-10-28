@@ -9,18 +9,20 @@ import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import axios from "axios";
+import { useLoaderData } from "react-router";
 
 export const ItemDetailsPage = () => {
-  const { data, isLoading, isError } = useQuery(["ItemDetailsPage"], async () => {
-    let res = await axios.get("/api/v1/item/2", {
-      params: { id: 2 }
-    });
-    return res.data;
-  });
+  const data = useLoaderData();
+  // const { data, isLoading, isError } = useQuery(["ItemDetailsPage"], async () => {
+  //   let res = await axios.get("/api/v1/item/", {
+  //     params: { id: 2 }
+  //   });
+  //   return res.data;
+  // });
 
-  if (isLoading) return <div>Loading...</div>;
+  // if (isLoading) return <div>Loading...</div>;
 
-  if (isError) return <div>Some error when requesting the information</div>;
+  // if (isError) return <div>Some error when requesting the information</div>;
 
   var url = window.location.pathname;
   url = url + "/ar"
