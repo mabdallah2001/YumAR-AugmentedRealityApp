@@ -1,15 +1,12 @@
 from django.urls import path, re_path
-from app.views import example_route
-
-from app.views import getOrder
-
-
+from .views import example_route, get_menu_items, log_in, test_login_req, whoami, get_menu_item, getOrder
 
 # Add URLS for endpoints located in views.py here
 urlpatterns = [
-  path('example/', example_route)
-]
-
-urlpatterns = [
-  path('order/', getOrder)
+    path('example/', example_route),
+    path('menu/', get_menu_items),
+    path('login', log_in),
+    path('item/<int:id>/',get_menu_item),
+    path('whoami', whoami),
+    path('order/', getOrder)
 ]

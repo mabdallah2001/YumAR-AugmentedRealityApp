@@ -2,6 +2,7 @@ from email.policy import default
 from django.db import models
 from django.db.models import SET_NULL
 from django.core.validators import MinValueValidator
+from django.contrib.auth.models import User
 
 # Create your models here.
 
@@ -23,6 +24,7 @@ class Restaurant(models.Model):
 
 class Staff(models.Model):
     username = models.CharField(max_length=100, blank=False)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     restaurant = models.ForeignKey(Restaurant, on_delete=SET_NULL, default=None, null=True)
     is_admin = models.BooleanField(default=False)
     
