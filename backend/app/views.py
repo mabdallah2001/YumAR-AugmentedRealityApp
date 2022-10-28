@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
-from models import Order
+from  app.models import Order
 from django.http import JsonResponse
 
 
