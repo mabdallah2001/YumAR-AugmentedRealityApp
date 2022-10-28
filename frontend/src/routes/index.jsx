@@ -19,12 +19,12 @@ export const CustomerHomePage = () => {
     <div>
       {data.map(menuItem => {
         return (
-          <Card variant="outlined">
-            <div key={menuItem.pk}>
-              {menuItem.fields.name}
-              <Link to={`item/${menuItem.pk}`}>See Item Details</Link>
-            </div>
-          </Card>
+          <div key={menuItem.pk}>
+            <Card variant="outlined">
+              <h1>{menuItem.fields.name}</h1>
+              <h4><Link to={`item/${menuItem.pk}`}>See Item Details</Link></h4>
+            </Card>
+          </div>
         );
       })}
     </div>
