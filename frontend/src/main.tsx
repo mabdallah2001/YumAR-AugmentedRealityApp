@@ -134,10 +134,6 @@ const router = createBrowserRouter([
         element: <NewCategoryPage />,
       },
       {
-        path: "item/new",
-        element: <NewItemPage />,
-      },
-      {
         path: "item/:itemId",
         loader: async ({ params }) => {
           let res = await axios.get(`/api/v1/item/${params.itemId}`, {

@@ -1,5 +1,6 @@
 import json
 from math import fabs
+from unicodedata import category, name
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
@@ -65,4 +66,17 @@ def new_category(request):
         return JsonResponse("Unauthorized", safe=False, status=403)
     data = json.loads(request.body)
     Category.objects.create(name=data["name"])
+    return JsonResponse({"msg": "ok"}, status=200)
+
+@csrf_exempt
+@require_http_methods(['POST'])
+@login_required
+def new_menu_item(request, catId):
+    if not request.user.staff.is_admin:
+        return JsonResponse("Unauthorized", safe=False, status=403)
+    category = Category.objects.get(id=catId)
+    if (category == None):
+        return JsonResponse("Category not found", safe=False, status=400)
+    data = json.loads(request.body)
+    MenuItem.objects.create(name=data["name"], category=category, price=data["price"], link_3d_model=data["model"])
     return JsonResponse({"msg": "ok"}, status=200)
