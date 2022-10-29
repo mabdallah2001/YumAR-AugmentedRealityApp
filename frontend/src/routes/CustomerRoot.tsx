@@ -3,7 +3,7 @@ import { Outlet, useLoaderData } from "react-router-dom";
 import { BottomMenu } from "../components/BottomMenu";
 import { IUser } from "../main";
 
-interface ILoaderType {
+export interface ILoaderType {
   path: string;
   user: IUser;
 }
@@ -16,7 +16,7 @@ export const CustomerRoot: FC = () => {
   return (
     <div className="App">
       <Outlet />
-      <BottomMenu initialPath={path} user={user} />
+      <BottomMenu initialPath={path} user={user} inStaff={false} />
     </div>
   );
 };

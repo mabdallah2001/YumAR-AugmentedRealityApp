@@ -76,9 +76,9 @@ const router = createBrowserRouter([
       },
       {
         path: "/item/:itemId",
-        loader: async ({params}) => {
+        loader: async ({ params }) => {
           let res = await axios.get(`/api/v1/item/${params.itemId}`, {
-            params: { id: 2 }
+            params: { id: 2 },
           });
           return res.data;
         },
@@ -114,6 +114,13 @@ const router = createBrowserRouter([
     // TODO: loader to check session
     children: [
       {
+        loader: async () => {
+          let response = await fetch("/api/v1/categories", { method: "GET" });
+          if (!response.ok) {
+            throw new Error("Could not retrieve menu items");
+          }
+          return await response.json();
+        },
         path: "",
         element: <StaffHomePage />,
       },

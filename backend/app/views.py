@@ -5,8 +5,8 @@ from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
-from django.http import JsonResponse
-from .models import Restaurant,MenuItem
+from django.http import JsonResponse, HttpResponse
+from .models import Category, Restaurant,MenuItem
 from django.core import serializers;
 
 from .models import Restaurant, MenuItem
@@ -29,6 +29,16 @@ def get_menu_item(request,id):
     data = list(MenuItem.objects.filter(id=id).values())
     print (data)
     return JsonResponse(data, safe=False, status=200)
+
+@require_http_methods(['GET'])
+def get_menu_categories(request):
+    data = list(Category.objects.values())
+    return JsonResponse(data, safe=False)
+
+@require_http_methods(['GET'])
+def get_category_items(request, catId):
+    data = list(MenuItem.objects.filter(category=catId).values())
+    return JsonResponse(data, safe=False)
 
 @login_required
 @require_http_methods(['GET'])

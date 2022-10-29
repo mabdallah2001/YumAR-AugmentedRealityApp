@@ -8,12 +8,15 @@ import {
 import { useNavigate } from "react-router-dom";
 import { IUser } from "../main";
 
-const mapIndexToRoute = (index: number, user: IUser) => {
+const mapIndexToRoute = (index: number, user: IUser, inStaff: boolean) => {
   switch (index) {
     case 0:
-      return "";
+      if (inStaff) {
+        return "/staff";
+      }
+      return "/";
     case 1:
-      return user === null ? "order" : "/staff";
+      return user === null ? "order" : "/staff/people";
   }
   return "";
 };
@@ -21,17 +24,20 @@ const mapIndexToRoute = (index: number, user: IUser) => {
 const initialPathToIndex = (path: string) => {
   switch (path) {
     case "/":
+    case "/staff":
       return 0;
     case "/order":
+    case "/staff/people":
       return 1;
   }
   return 0;
 };
 
-export const BottomMenu: FC<{ initialPath: string; user: IUser }> = ({
-  initialPath,
-  user,
-}) => {
+export const BottomMenu: FC<{
+  initialPath: string;
+  user: IUser;
+  inStaff: boolean;
+}> = ({ initialPath, user, inStaff }) => {
   const [value, setValue] = useState(initialPathToIndex(initialPath));
   const navigate = useNavigate();
   return (
@@ -44,7 +50,7 @@ export const BottomMenu: FC<{ initialPath: string; user: IUser }> = ({
         value={value}
         onChange={(_, newValue) => {
           setValue(newValue);
-          navigate(mapIndexToRoute(newValue, user));
+          navigate(mapIndexToRoute(newValue, user, inStaff));
         }}
       >
         <BottomNavigationAction label="Menu" icon={<MdRestaurantMenu />} />
