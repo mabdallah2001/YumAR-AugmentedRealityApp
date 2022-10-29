@@ -119,14 +119,16 @@ def delete_menu_item(request, id):
 @csrf_exempt
 @login_required
 @require_http_methods(['DELETE'])
-def delete_user(request, id):
+def delete_user(request, username):
     if not request.user.staff.is_admin:
         return JsonResponse("Unauthorized", safe=False, status=403)
-    userToDelete = Staff.objects.filter(id=id)
+    userToDelete = Staff.objects.get(username=username, restaurant=request.user.staff.restaurant)
     if (userToDelete == None):
         return JsonResponse("Not found", safe=False, status=404)
     m = ModelBackend()
     authUserToDelete = m.get_user(user_id=userToDelete.user.id)
+    if (authUserToDelete == None):
+        return JsonResponse("Not found", safe=False, status=404)
     authUserToDelete.delete()
     userToDelete.delete()
     return JsonResponse({"msg": "ok"}, safe=False, status=200)

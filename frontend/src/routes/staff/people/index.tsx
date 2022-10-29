@@ -45,23 +45,23 @@ export const PeoplePage: FC = () => {
 
   const { mutate: deleteUser, isLoading: isDeleting } = useMutation(
     [`delete-user`],
-    async (userId: number) => {
-      const res = await axios.delete(`/api/v1/user/${userId}/delete`);
+    async (username: string) => {
+      const res = await axios.delete(`/api/v1/user/${username}/delete`);
       return res.data;
     },
     {
       onSuccess: () => {
         refetch();
         toast.info("User deleted");
-        setOpen(-1);
+        setOpen("");
       },
       onError: () => {
-        toast.error("There was an error while creating the new item");
+        toast.error("There was an error when deleting the user");
       },
     }
   );
 
-  const [open, setOpen] = useState(-1);
+  const [open, setOpen] = useState("");
 
   return (
     <div>
@@ -78,7 +78,7 @@ export const PeoplePage: FC = () => {
             </CardContent>
             {person.username === user.username ? null : (
               <CardActions>
-                <Button size="small" color="error">
+                <Button size="small" color="error" onClick={() => setOpen(person.username)}>
                   DELETE
                 </Button>
               </CardActions>
@@ -105,7 +105,7 @@ export const PeoplePage: FC = () => {
           New member
         </Fab>
       </div>
-      <Dialog open={open !== -1} onClose={() => setOpen(-1)}>
+      <Dialog open={open !== ""} onClose={() => setOpen("")}>
         <DialogTitle id="alert-dialog-title">
           Are you sure you want to delete this item?
         </DialogTitle>
@@ -115,7 +115,7 @@ export const PeoplePage: FC = () => {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button disabled={isDeleting} onClick={() => setOpen(-1)}>
+          <Button disabled={isDeleting} onClick={() => setOpen("")}>
             Close
           </Button>
           <Button

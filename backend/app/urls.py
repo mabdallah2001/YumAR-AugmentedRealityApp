@@ -8,7 +8,7 @@ urlpatterns = [
     path('login', log_in),
     path('item/<int:id>/',get_menu_item),
     path('item/<int:id>/delete', delete_menu_item),
-    path('user/<int:id>/delete', delete_user),
+    path('user/<str:username>/delete', delete_user),
     path('people', get_restaurant_people),
     path('whoami', whoami),
     path('register', register),
