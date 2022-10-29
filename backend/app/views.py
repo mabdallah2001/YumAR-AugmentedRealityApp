@@ -7,7 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout
 from django.http import JsonResponse, HttpResponse
-from .models import Category, Restaurant,MenuItem, Staff
+from .models import Category, Order, Restaurant,MenuItem, Staff
 from django.core import serializers;
 from django.contrib.auth.models import User
 
@@ -54,6 +54,19 @@ def get_restaurant_people(request):
         return JsonResponse("Unauthorized", safe=False, status=403)
     restaurantPeople = list(Staff.objects.filter(restaurant=request.user.staff.restaurant).values())
     return JsonResponse(restaurantPeople, safe=False, status=200)
+
+@login_required
+@require_http_methods(['GET'])
+def get_restaurant_orders(request):
+    orders = list(Order.objects.filter(restaurant=request.user.staff.restaurant, is_completed=False).values())
+    return JsonResponse(orders, safe=False, status=200)
+
+@login_required
+@require_http_methods(['GET'])
+def get_order_items(request, orderId):
+    order = Order.objects.get(id=orderId, restaurant=request.user.staff.restaurant)
+    menuItems = list(order.menu_items.values())
+    return JsonResponse(menuItems, safe=False, status=200)
 
 @csrf_exempt
 @require_http_methods(['POST'])

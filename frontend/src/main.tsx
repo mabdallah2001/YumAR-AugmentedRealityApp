@@ -172,6 +172,11 @@ const router = createBrowserRouter([
       },
       {
         path: "orders",
+        loader: async () => {
+          if (user === null) return redirect("/staff");
+          let res = await axios.get("/api/v1/orders");
+          return res.data;
+        },
         element: <StaffOrdersPage />,
       },
       {
