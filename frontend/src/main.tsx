@@ -75,6 +75,13 @@ const router = createBrowserRouter([
     children: [
       {
         path: "",
+        loader: async () => {
+          let response = await fetch("/api/v1/categories", { method: "GET" });
+          if (!response.ok) {
+            throw new Error("Could not retrieve menu items");
+          }
+          return await response.json();
+        },
         element: <CustomerHomePage />,
       },
       {
