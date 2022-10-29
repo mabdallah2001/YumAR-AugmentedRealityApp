@@ -7,8 +7,9 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
 from django.http import JsonResponse, HttpResponse
-from .models import Category, Restaurant,MenuItem
+from .models import Category, Restaurant,MenuItem, Staff
 from django.core import serializers;
+from django.contrib.auth.models import User
 
 from .models import Restaurant, MenuItem
 from django.contrib.auth.backends import ModelBackend
@@ -46,6 +47,14 @@ def get_category_items(request, catId):
 def whoami(request):
     return JsonResponse({"username": request.user.username, "is_admin": request.user.staff.is_admin})
 
+@login_required
+@require_http_methods(['GET'])
+def get_restaurant_people(request):
+    if not request.user.staff.is_admin:
+        return JsonResponse("Unauthorized", safe=False, status=403)
+    restaurantPeople = list(Staff.objects.filter(restaurant=request.user.staff.restaurant).values())
+    return JsonResponse(restaurantPeople, safe=False, status=200)
+
 @csrf_exempt
 @require_http_methods(['POST'])
 def log_in(request):
@@ -82,6 +91,23 @@ def new_menu_item(request, catId):
     return JsonResponse({"msg": "ok"}, status=200)
 
 @csrf_exempt
+@require_http_methods(['POST'])
+@login_required
+def register(request):
+    if not request.user.staff.is_admin:
+        return JsonResponse("Unauthorized", safe=False, status=403)
+    data = json.loads(request.body)
+    user = User.objects.create_user(username=data["username"], password=data["password"], is_staff=False)
+    if user == None:
+        return JsonResponse("Could not create user", safe=False, status=400)
+    userStaff = Staff.objects.create(username=user.username, user=user, restaurant=request.user.staff.restaurant, is_admin=data["is_admin"])
+    if userStaff == None:
+        user.delete()
+        return JsonResponse("Could not create user", safe=False, status=400)
+    return JsonResponse({"username": userStaff.username,
+                         "is_admin": userStaff.is_admin}, status=200)
+
+@csrf_exempt
 @require_http_methods(['DELETE'])
 @login_required
 def delete_menu_item(request, id):
@@ -89,3 +115,18 @@ def delete_menu_item(request, id):
         return JsonResponse("Unauthorized", safe=False, status=403)
     MenuItem.objects.filter(id=id).delete()
     return JsonResponse({"msg": "ok"}, status=200)
+
+@csrf_exempt
+@login_required
+@require_http_methods(['DELETE'])
+def delete_user(request, id):
+    if not request.user.staff.is_admin:
+        return JsonResponse("Unauthorized", safe=False, status=403)
+    userToDelete = Staff.objects.filter(id=id)
+    if (userToDelete == None):
+        return JsonResponse("Not found", safe=False, status=404)
+    m = ModelBackend()
+    authUserToDelete = m.get_user(user_id=userToDelete.user.id)
+    authUserToDelete.delete()
+    userToDelete.delete()
+    return JsonResponse({"msg": "ok"}, safe=False, status=200)

@@ -147,10 +147,19 @@ const router = createBrowserRouter([
       },
       {
         path: "people",
+        loader: async () => {
+          if (user == null || !user.is_admin) return redirect("/staff");
+          let res = await axios.get("/api/v1/people");
+          return res.data;
+        },
         element: <PeoplePage />,
       },
       {
         path: "people/add",
+        loader: async () => {
+          if (user == null || !user.is_admin) return redirect("/staff");
+          return user;
+        },
         element: <AddPeoplePage />,
       },
       {
