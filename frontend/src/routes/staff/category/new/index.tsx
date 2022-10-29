@@ -1,17 +1,11 @@
-import {
-  Button,
-  FormControl,
-  Input,
-  InputAdornment,
-  InputLabel,
-} from "@mui/material";
+import { LoadingButton } from "@mui/lab";
+import { FormControl, Input, InputAdornment, InputLabel } from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { FC, useState } from "react";
 import { MdCategory } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { Spinner } from "../../../../components/Spinner";
 
 export const NewCategoryPage: FC = () => {
   const navigate = useNavigate();
@@ -36,6 +30,7 @@ export const NewCategoryPage: FC = () => {
       <form
         onSubmit={(e) => {
           e.preventDefault();
+          if (isLoading) return;
           if (name === "") {
             toast.error("Category needs a name");
             return;
@@ -58,15 +53,14 @@ export const NewCategoryPage: FC = () => {
             }
           />
         </FormControl>
-        <Button
-          variant="contained"
+        <LoadingButton
+          loading={isLoading}
+          variant="outlined"
           type="submit"
           style={{ width: "100%", marginTop: "0.3em" }}
-          disabled={isLoading}
         >
-          {isLoading ? <Spinner /> : null}
           Save
-        </Button>
+        </LoadingButton>
       </form>
     </div>
   );
