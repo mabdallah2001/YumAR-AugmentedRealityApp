@@ -25,7 +25,7 @@ export const LogInPage = () => {
     },
     {
       onSuccess: () => {
-        navigate("/staff");
+        return navigate("/staff");
       },
       onError: () => {
         toast.error("Wrong username or password");

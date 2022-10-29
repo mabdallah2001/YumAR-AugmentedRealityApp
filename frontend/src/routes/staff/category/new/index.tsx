@@ -18,7 +18,7 @@ export const NewCategoryPage: FC = () => {
     },
     {
       onSuccess: () => {
-        navigate("/staff");
+        return navigate("/staff");
       },
       onError: () => {
         toast.error("There was an error while creating the category");
