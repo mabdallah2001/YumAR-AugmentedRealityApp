@@ -138,11 +138,9 @@ const NewMenuItem: FC<{ categoryId: number; refetch: () => void }> = ({
   );
 };
 
-const MenuCategory: FC<ICategory & { isAdmin: boolean }> = ({
-  id,
-  name,
-  isAdmin,
-}) => {
+const MenuCategory: FC<
+  ICategory & { isAdmin: boolean; onDeleteClick: (id: number) => void }
+> = ({ id, name, isAdmin, onDeleteClick }) => {
   const [open, setOpen] = useState(-1);
 
   const { data, isLoading, isError, refetch } = useQuery<
@@ -179,8 +177,30 @@ const MenuCategory: FC<ICategory & { isAdmin: boolean }> = ({
           expandIcon={<MdExpandMore />}
           aria-controls="panel1a-content"
           id="panel1a-header"
+          style={{ position: "relative" }}
         >
-          <Typography>{name}</Typography>
+          {isAdmin ? (
+            <Typography>
+              {name}
+              <span
+                style={{
+                  position: "absolute",
+                  right: "30px",
+                  top: "5px",
+                }}
+              >
+                <Button
+                  color="error"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onDeleteClick(id);
+                  }}
+                >
+                  DELETE
+                </Button>
+              </span>
+            </Typography>
+          ) : null}
         </AccordionSummary>
         <AccordionDetails>
           {isError ? (
@@ -241,8 +261,42 @@ export interface IOutletContext {
 
 export const StaffHomePage: FC = () => {
   const { user } = useOutletContext() as IOutletContext;
-  const categories = useLoaderData() as ICategory[];
+  const categoriesInit = useLoaderData() as ICategory[];
   const navigate = useNavigate();
+  const [open, setOpen] = useState(-1);
+
+  const { data: categories, refetch } = useQuery<
+    ICategory[],
+    Error,
+    ICategory[]
+  >(
+    ["people"],
+    async () => {
+      const res = await axios.get("/api/v1/categories");
+      return res.data;
+    },
+    {
+      initialData: categoriesInit,
+    }
+  );
+
+  const { mutate: deleteCategory, isLoading: isDeleting } = useMutation(
+    [`delete-category`],
+    async (categoryId: number) => {
+      const res = await axios.delete(`/api/v1/categories/${categoryId}/delete`);
+      return res.data;
+    },
+    {
+      onSuccess: () => {
+        refetch();
+        toast.info("Category deleted");
+        setOpen(-1);
+      },
+      onError: () => {
+        toast.error("There was an error while creating the new item");
+      },
+    }
+  );
 
   return (
     <div>
@@ -252,8 +306,39 @@ export const StaffHomePage: FC = () => {
             {...category}
             key={`category-${category.id}`}
             isAdmin={user.is_admin}
+            onDeleteClick={(id) => {
+              setOpen(id);
+            }}
           />
         ))}
+        {user.is_admin ? (
+          <Dialog open={open !== -1} onClose={() => setOpen(-1)}>
+            <DialogTitle id="alert-dialog-title">
+              Are you sure you want to delete this category?
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                {isDeleting ? (
+                  <Spinner />
+                ) : (
+                  "This will delete the category and all its items forever"
+                )}
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button disabled={isDeleting} onClick={() => setOpen(-1)}>
+                Close
+              </Button>
+              <Button
+                disabled={isDeleting}
+                color="error"
+                onClick={() => deleteCategory(open)}
+              >
+                Delete
+              </Button>
+            </DialogActions>
+          </Dialog>
+        ) : null}
       </div>
       {user !== null && user.is_admin ? (
         <div

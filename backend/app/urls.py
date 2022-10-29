@@ -1,5 +1,5 @@
 from django.urls import path, re_path
-from .views import delete_menu_item, delete_user, example_route, get_category_items, get_menu_categories, get_menu_items, get_restaurant_people, log_in, log_out, new_category, new_menu_item, register, whoami, get_menu_item
+from .views import delete_menu_category, delete_menu_item, delete_user, example_route, get_category_items, get_menu_categories, get_menu_items, get_restaurant_people, log_in, log_out, new_category, new_menu_item, register, whoami, get_menu_item
 
 # Add URLS for endpoints located in views.py here
 urlpatterns = [
@@ -17,4 +17,5 @@ urlpatterns = [
     path('categories/<int:catId>', get_category_items),
     path('categories/new', new_category),
     path('categories/<int:catId>/new', new_menu_item),
+    path('categories/<int:catId>/delete', delete_menu_category),
 ]

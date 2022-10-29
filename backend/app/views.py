@@ -124,6 +124,15 @@ def delete_menu_item(request, id):
     return JsonResponse({"msg": "ok"}, status=200)
 
 @csrf_exempt
+@require_http_methods(['DELETE'])
+@login_required
+def delete_menu_category(request, catId):
+    if not request.user.staff.is_admin:
+        return JsonResponse("Unauthorized", safe=False, status=403)
+    Category.objects.filter(id=catId).delete()
+    return JsonResponse({"msg": "ok"}, status=200)
+
+@csrf_exempt
 @login_required
 @require_http_methods(['DELETE'])
 def delete_user(request, username):

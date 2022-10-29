@@ -29,8 +29,6 @@ export const PeoplePage: FC = () => {
 
   const {
     data: people,
-    isLoading,
-    isError,
     refetch,
   } = useQuery<IUser[], Error, IUser[]>(
     ["people"],
