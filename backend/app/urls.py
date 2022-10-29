@@ -1,11 +1,24 @@
 from django.urls import path, re_path
-from .views import example_route, get_menu_items, log_in, test_login_req, whoami, get_menu_item
+from .views import complete_order, delete_menu_category, delete_menu_item, delete_user, example_route, get_category_items, get_menu_categories, get_menu_items, get_order_items, get_restaurant_orders, get_restaurant_people, log_in, log_out, new_category, new_menu_item, register, whoami, get_menu_item
 
 # Add URLS for endpoints located in views.py here
 urlpatterns = [
     path('example/', example_route),
     path('menu/', get_menu_items),
+    path('orders', get_restaurant_orders),
+    path('orders/<int:orderId>/items', get_order_items),
+    path('orders/<int:orderId>/complete', complete_order),
     path('login', log_in),
-    path('item/<int:id>/',get_menu_item),
-    path('whoami', whoami)
+    path('logout', log_out),
+    path('item/<int:id>/', get_menu_item),
+    path('item/<int:id>/delete', delete_menu_item),
+    path('user/<str:username>/delete', delete_user),
+    path('people', get_restaurant_people),
+    path('whoami', whoami),
+    path('register', register),
+    path('categories', get_menu_categories),
+    path('categories/<int:catId>', get_category_items),
+    path('categories/new', new_category),
+    path('categories/<int:catId>/new', new_menu_item),
+    path('categories/<int:catId>/delete', delete_menu_category),
 ]
