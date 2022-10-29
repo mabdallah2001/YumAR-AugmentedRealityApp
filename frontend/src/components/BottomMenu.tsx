@@ -17,21 +17,33 @@ const mapIndexToRoute = (index: number, user: IUser, inStaff: boolean) => {
       }
       return "/";
     case 1:
-      return user === null ? "order" : "/staff/people";
+      return user === null ? "/" : "/staff/orders";
     case 2:
-      return user === null ? "/" : "/staff/profile";
+      return user === null
+        ? "/"
+        : user.is_admin
+        ? "/staff/people"
+        : "/staff/profile";
+    case 3:
+      return user === null ? "/order" : "/staff/people";
+    case 4:
+      return "/staff/profile";
   }
   return "";
 };
 
-const initialPathToIndex = (path: string) => {
+const initialPathToIndex = (path: string, user: IUser) => {
   switch (path) {
     case "/":
     case "/staff":
       return 0;
     case "/order":
-    case "/staff/people":
+    case "/staff/orders":
       return 1;
+    case "/staff/people":
+      return 2;
+    case "/staff/profile":
+      return user?.is_admin ? 3 : 2;
   }
   return 0;
 };
@@ -41,7 +53,7 @@ export const BottomMenu: FC<{
   user: IUser;
   inStaff: boolean;
 }> = ({ initialPath, user, inStaff }) => {
-  const [value, setValue] = useState(initialPathToIndex(initialPath));
+  const [value, setValue] = useState(initialPathToIndex(initialPath, user));
   const navigate = useNavigate();
   return (
     <Paper
@@ -57,17 +69,24 @@ export const BottomMenu: FC<{
         }}
       >
         <BottomNavigationAction label="Menu" icon={<MdRestaurantMenu />} />
+        {user !== null ? (
+          <BottomNavigationAction
+            label="Orders"
+            icon={<MdOutlineShoppingCart />}
+          />
+        ) : null}
+        {user !== null && user.is_admin ? (
+          <BottomNavigationAction
+            label="Staff"
+            icon={<MdOutlineAdminPanelSettings />}
+          />
+        ) : null}
         {user === null ? (
           <BottomNavigationAction
             label="Order"
             icon={<MdOutlineShoppingCart />}
           />
-        ) : (
-          <BottomNavigationAction
-            label="Staff"
-            icon={<MdOutlineAdminPanelSettings />}
-          />
-        )}
+        ) : null}
         {user !== null ? (
           <BottomNavigationAction label="Profile" icon={<AiOutlineUser />} />
         ) : null}
