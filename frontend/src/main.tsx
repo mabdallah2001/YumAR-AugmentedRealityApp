@@ -100,6 +100,7 @@ const router = createBrowserRouter([
     errorElement: <div>Error page</div>, // TODO: create proper error page
     loader: async ({ request }) => {
       if (ranOnce && user === null) return redirect("/login");
+      ranOnce = true;
       const url = new URL(request.url);
       try {
         user = (await axios.get("/api/v1/whoami")).data as IUser;
@@ -126,6 +127,10 @@ const router = createBrowserRouter([
       },
       {
         path: "category/new",
+        loader: () => {
+          if (user == null || !user.is_admin) return redirect("/staff");
+          return user;
+        },
         element: <NewCategoryPage />,
       },
       {
@@ -134,6 +139,12 @@ const router = createBrowserRouter([
       },
       {
         path: "item/:itemId",
+        loader: async ({ params }) => {
+          let res = await axios.get(`/api/v1/item/${params.itemId}`, {
+            params: { id: 2 },
+          });
+          return res.data;
+        },
         element: <ItemDetailsPage />,
       },
       {

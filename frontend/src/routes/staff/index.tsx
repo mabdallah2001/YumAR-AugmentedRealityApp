@@ -9,10 +9,12 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { FC } from "react";
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, useNavigate, useOutletContext } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { MdExpandMore } from "react-icons/md";
+import { AiOutlinePlus } from "react-icons/ai";
 import { Spinner } from "../../components/Spinner";
+import { IUser } from "../../main";
 
 interface ICategory {
   id: number;
@@ -66,26 +68,45 @@ export const MenuCategory: FC<ICategory> = ({ id, name }) => {
   );
 };
 
+export interface IOutletContext {
+  user: IUser;
+}
+
 export const StaffHomePage: FC = () => {
+  const { user } = useOutletContext() as IOutletContext;
   const categories = useLoaderData() as ICategory[];
+  const navigate = useNavigate();
+
   return (
     <div>
-      {categories.map((category) => {
-        return (
+      <div style={{ paddingBottom: "130px" }}>
+        {categories.map((category) => (
           <MenuCategory {...category} key={`category-${category.id}`} />
-          // <div key={menuItem.pk}>
-          //   <Card variant="outlined">
-          //     <h1>{menuItem.fields.name}</h1>
-          //     <h4>
-          //       <Link to={`item/${menuItem.pk}`}>See Item Details</Link>
-          //     </h4>
-          //   </Card>
-          // </div>
-        );
-      })}
-      <div>
-        <Fab variant="extended">New Category</Fab>
+        ))}
       </div>
+      {user !== null && user.is_admin ? (
+        <div
+          style={{
+            position: "fixed",
+            bottom: 70,
+            width: "100%",
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <Fab
+            variant="extended"
+            onClick={() => {
+              navigate("/staff/category/new");
+            }}
+          >
+            <AiOutlinePlus
+              style={{ fontSize: "1.4em", marginRight: "0.1em" }}
+            />
+            New Category
+          </Fab>
+        </div>
+      ) : null}
     </div>
   );
 };
