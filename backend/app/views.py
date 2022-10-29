@@ -56,3 +56,13 @@ def log_in(request):
     login(request, user)
     return JsonResponse({"username": user.staff.username,
                          "is_admin": user.staff.is_admin}, status=200)
+
+@csrf_exempt
+@require_http_methods(['POST'])
+@login_required
+def new_category(request):
+    if not request.user.staff.is_admin:
+        return JsonResponse("Unauthorized", safe=False, status=403)
+    data = json.loads(request.body)
+    Category.objects.create(name=data["name"])
+    return JsonResponse({"msg": "ok"}, status=200)

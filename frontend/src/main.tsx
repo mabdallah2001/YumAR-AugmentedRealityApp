@@ -108,7 +108,7 @@ const router = createBrowserRouter([
           user,
           path: url.pathname,
         };
-      } catch {
+      } catch (e) {
         return redirect("/login");
       }
     },
