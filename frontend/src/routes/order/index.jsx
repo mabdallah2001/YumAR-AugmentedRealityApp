@@ -14,10 +14,52 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useQuery } from "@tanstack/react-query";
+import axios from 'axios';
 
 
 
+const OrderItem = ({id, quantity, handleClickOpen, handleChange}) => {
+  const {data, isLoading, isError} = useQuery([`item-${id}`], async () => {
+    let res = await axios.get(`/api/v1/item/${id}/`);
+    return res.data[0];
+  })
+  if (isLoading){
+    return <div>Loading...</div>
+  }
+  if (isError){
+    return <div>Error</div>
+    
+  }
+  return (
+  <Grid item mt={10} ml={10}>
+    <Card sx={{ minWidth: 275 }}>
+      <CardContent>
+        <Grid container>
+          <Grid item>
+            
+           <InputLabel id="demo-simple-select-autowidth-label">Quantity</InputLabel>
+          
+            <Typography ml={3}>{quantity}</Typography>
+     
 
+          </Grid>
+          <Grid item ml={5} mt={2.5}>
+            <Typography fontWeight={"bold"}>{data.name}</Typography>
+            {/* <Typography mt={0.5}>{data.description}</Typography> */}
+          </Grid>
+          <Grid item textAlign={"end"} justifyContent="end" alignContent={"end"} xs={100} my={-7}>
+            <div onClick={() => handleClickOpen(id)}>
+              <DeleteIcon/>
+            </div>
+            <Typography mt={1}>$ {data.price}</Typography>
+          </Grid>
+        </Grid>
+      </CardContent>
+    </Card>
+    </Grid>
+  )
+}
 
 
 export const OrderPage = () => {
@@ -30,23 +72,22 @@ export const OrderPage = () => {
   //   }
   // },[]); 
 
+
+
   const dummyData = [
     {
       id: 1,
-      name: "Aussie Sunrise",
-      description: "Two buttermilk pancakes with whipped butter, bacon, an egg and grilled banana and pineapple.",
+      quantity: 1,
       price: 16.95
     },
     {
       id: 2,
-      name: "The Dawn",
-      description: "Hash brown with scrambled eggs, bacon and grilled pineapple.",
+      quantity: 1,
       price: 15.95
     },
     {
       id: 3,
-      name: "Tandoori Pizza",
-      description: "Tender pieces of chicken breast marinated tandoori style.",
+      quantity: 1,
       price: 19.95
     }
   ]
@@ -55,6 +96,7 @@ export const OrderPage = () => {
   const [data, setData] = useState(dummyData);
   const [open, setOpen] = useState(false);
   const [deleteID, setDeleteID] = useState()
+  const [total, setTotal] = useState(0);
 
   const handleChange = (event) => {
     setQuantity(event.target.value);
@@ -75,6 +117,7 @@ export const OrderPage = () => {
   };
 
   const handleSubmit = () => {
+    // TODO: pass through parameters to backend addOrder endpoint (url, api/v1/placeOrder/)
     setTimeout(() => {
       alert("Order placed successfully")
       navigate("/")
@@ -101,44 +144,8 @@ export const OrderPage = () => {
         Your order
       </Typography>
     </Grid>
-    {data.map((item, idx) => (
-    <Grid item mt={10} ml={10} key={idx}>
-    <Card sx={{ minWidth: 275 }}>
-      <CardContent>
-        <Grid container>
-          <Grid item>
-            <FormControl sx={{ m: 1, minWidth: 80 }}>
-              <InputLabel id="demo-simple-select-autowidth-label">Quantity</InputLabel>
-                <Select
-                  labelId="demo-simple-select-autowidth-label"
-                  id="demo-simple-select-autowidth"
-                  value={quantity}
-                  onChange={handleChange}
-                  autoWidth
-                  label="Quantity"
-                >
-                <MenuItem value={1}>1</MenuItem>
-                <MenuItem value={2}>2</MenuItem>
-                <MenuItem value={3}>3</MenuItem>
-                <MenuItem value={4}>4</MenuItem>
-                <MenuItem value={5}>5</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item ml={5}>
-            <Typography fontWeight={"bold"}>{item.name}</Typography>
-            <Typography mt={0.5}>{item.description}</Typography>
-          </Grid>
-          <Grid item textAlign={"end"} justifyContent="end" alignContent={"end"} xs={100} my={-10}>
-            <div onClick={() => handleClickOpen(item.id)}>
-              <DeleteIcon/>
-            </div>
-            <Typography mt={1}>$ {item.price}</Typography>
-          </Grid>
-        </Grid>
-      </CardContent>
-    </Card>
-    </Grid>
+    {data.map((item) => (
+      <OrderItem id = {item.id} price = {item.price} quantity = {item.quantity} handleClickOpen = {handleClickOpen} handleChange = {handleChange} key={`order-item-${item.id}`}/>
     ))}
     <Dialog
         open={open}
@@ -163,7 +170,7 @@ export const OrderPage = () => {
       </Dialog>
       <Grid item textAlign={"end"} mt={8}>
         <Typography fontSize={18} >Total</Typography>
-        <Typography fontSize={19}>$ 68.85</Typography>
+        <Typography fontSize={19}>$ {total}</Typography>
       </Grid>
       <Grid item textAlign={"end"} mt={4} mb={10}>
         <Button variant="outlined" onClick={() => handleSubmit()}>Place Order</Button>

@@ -48,3 +48,12 @@ def log_in(request):
     login(request, user)
     return JsonResponse({"username": user.staff.username,
                          "is_admin": user.staff.is_admin}, status=200)
+
+@require_http_methods(['POST'])
+def addOrder(request):
+    pass
+    # order = Order.objects.create()
+    # order.order_number = 1
+    # # TODO
+    # order.save()
+

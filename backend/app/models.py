@@ -59,7 +59,6 @@ class Menu(models.Model):
 class Order(models.Model):
     order_number = models.IntegerField(validators=[MinValueValidator(0)])
     menu_items = models.ManyToManyField(MenuItem)
-    quantity = models.IntegerField(default=1)
     time_created = models.TimeField()
     total = models.FloatField(validators=[MinValueValidator(0.0)])
     is_completed = models.BooleanField(default=False)
