@@ -26,12 +26,10 @@ export const PeoplePage: FC = () => {
   const { user } = useOutletContext() as IOutletContext;
   const peopleInit = useLoaderData() as IUser[];
   const navigate = useNavigate();
+  const [open, setOpen] = useState("");
 
-  const {
-    data: people,
-    refetch,
-  } = useQuery<IUser[], Error, IUser[]>(
-    ["people"],
+  const { data: people, refetch } = useQuery<IUser[], Error, IUser[]>(
+    ["people-fetch"],
     async () => {
       const res = await axios.get("/api/v1/people");
       return res.data;
@@ -42,7 +40,7 @@ export const PeoplePage: FC = () => {
   );
 
   const { mutate: deleteUser, isLoading: isDeleting } = useMutation(
-    [`delete-user`],
+    ["delete-user"],
     async (username: string) => {
       const res = await axios.delete(`/api/v1/user/${username}/delete`);
       return res.data;
@@ -59,30 +57,34 @@ export const PeoplePage: FC = () => {
     }
   );
 
-  const [open, setOpen] = useState("");
-
   return (
     <div>
       <Stack spacing={2}>
-        {people.map((person) => (
-          <Card key={`person-${person.username}`}>
-            <CardContent>
-              <Typography variant="h5" component="div">
-                {person.username}
-              </Typography>
-              <Typography color="text.secondary">
-                {person.is_admin ? "Administrator" : "Staff"}
-              </Typography>
-            </CardContent>
-            {person.username === user.username ? null : (
-              <CardActions>
-                <Button size="small" color="error" onClick={() => setOpen(person.username)}>
-                  DELETE
-                </Button>
-              </CardActions>
-            )}
-          </Card>
-        ))}
+        {people.map((person) => {
+          return (
+            <Card key={`person-${person.username}`}>
+              <CardContent>
+                <Typography variant="h5" component="div">
+                  {person.username}
+                </Typography>
+                <Typography color="text.secondary">
+                  {person.is_admin ? "Administrator" : "Staff"}
+                </Typography>
+              </CardContent>
+              {person.username === user.username ? null : (
+                <CardActions>
+                  <Button
+                    size="small"
+                    color="error"
+                    onClick={() => setOpen(person.username)}
+                  >
+                    DELETE
+                  </Button>
+                </CardActions>
+              )}
+            </Card>
+          );
+        })}
       </Stack>
       <div
         style={{

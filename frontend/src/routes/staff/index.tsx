@@ -179,9 +179,9 @@ const MenuCategory: FC<
           id="panel1a-header"
           style={{ position: "relative" }}
         >
-          {isAdmin ? (
-            <Typography>
-              {name}
+          <Typography>
+            {name}
+            {isAdmin ? (
               <span
                 style={{
                   position: "absolute",
@@ -199,8 +199,8 @@ const MenuCategory: FC<
                   DELETE
                 </Button>
               </span>
-            </Typography>
-          ) : null}
+            ) : null}
+          </Typography>
         </AccordionSummary>
         <AccordionDetails>
           {isError ? (
@@ -215,9 +215,11 @@ const MenuCategory: FC<
                   <h4>
                     <Link to={`item/${menuItem.id}`}>See Item Details</Link>
                   </h4>
-                  <Fab color="error" onClick={() => setOpen(menuItem.id)}>
-                    <MdDelete style={{ fontSize: "1.7em" }} />
-                  </Fab>
+                  {isAdmin ? (
+                    <Fab color="error" onClick={() => setOpen(menuItem.id)}>
+                      <MdDelete style={{ fontSize: "1.7em" }} />
+                    </Fab>
+                  ) : null}
                 </Card>
               ))}
               {isAdmin ? (
