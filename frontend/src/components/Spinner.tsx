@@ -1,11 +1,12 @@
 import { FC } from "react";
-import { ImSpinner } from "react-icons/im";
+import { FaSpinner } from "react-icons/fa";
+import "./Spinner.css";
 
 export const Spinner: FC = () => {
   return (
-    <ImSpinner
+    <FaSpinner
       style={{
-        animation: "rotation 2s infinite linear",
+        animation: "rotation 1s infinite linear",
       }}
     />
   );

@@ -80,3 +80,12 @@ def new_menu_item(request, catId):
     data = json.loads(request.body)
     MenuItem.objects.create(name=data["name"], category=category, price=data["price"], link_3d_model=data["model"])
     return JsonResponse({"msg": "ok"}, status=200)
+
+@csrf_exempt
+@require_http_methods(['DELETE'])
+@login_required
+def delete_menu_item(request, id):
+    if not request.user.staff.is_admin:
+        return JsonResponse("Unauthorized", safe=False, status=403)
+    MenuItem.objects.filter(id=id).delete()
+    return JsonResponse({"msg": "ok"}, status=200)

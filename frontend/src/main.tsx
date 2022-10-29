@@ -112,7 +112,6 @@ const router = createBrowserRouter([
         return redirect("/login");
       }
     },
-    // TODO: loader to check session
     children: [
       {
         loader: async () => {

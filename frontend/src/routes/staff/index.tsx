@@ -4,6 +4,11 @@ import {
   AccordionSummary,
   Button,
   Card,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   Fab,
   InputAdornment,
   TextField,
@@ -19,6 +24,7 @@ import { AiOutlinePlus } from "react-icons/ai";
 import { Spinner } from "../../components/Spinner";
 import { IUser } from "../../main";
 import { BsCurrencyDollar } from "react-icons/bs";
+import { MdDelete } from "react-icons/md";
 import { LoadingButton } from "@mui/lab";
 import { toast } from "react-toastify";
 
@@ -137,6 +143,8 @@ const MenuCategory: FC<ICategory & { isAdmin: boolean }> = ({
   name,
   isAdmin,
 }) => {
+  const [open, setOpen] = useState(-1);
+
   const { data, isLoading, isError, refetch } = useQuery<
     void,
     Error,
@@ -145,6 +153,25 @@ const MenuCategory: FC<ICategory & { isAdmin: boolean }> = ({
     const res = await axios.get(`/api/v1/categories/${id}`);
     return res.data;
   });
+
+  const { mutate: deleteItem, isLoading: isDeleting } = useMutation(
+    [`delete-item-${id}`],
+    async (itemId: number) => {
+      const res = await axios.delete(`/api/v1/item/${itemId}/delete`);
+      return res.data;
+    },
+    {
+      onSuccess: () => {
+        refetch();
+        toast.info("Item deleted");
+        setOpen(-1);
+      },
+      onError: () => {
+        toast.error("There was an error while creating the new item");
+      },
+    }
+  );
+
   return (
     <div>
       <Accordion>
@@ -168,6 +195,9 @@ const MenuCategory: FC<ICategory & { isAdmin: boolean }> = ({
                   <h4>
                     <Link to={`item/${menuItem.id}`}>See Item Details</Link>
                   </h4>
+                  <Fab color="error" onClick={() => setOpen(menuItem.id)}>
+                    <MdDelete style={{ fontSize: "1.7em" }} />
+                  </Fab>
                 </Card>
               ))}
               {isAdmin ? (
@@ -177,6 +207,30 @@ const MenuCategory: FC<ICategory & { isAdmin: boolean }> = ({
           )}
         </AccordionDetails>
       </Accordion>
+      {isAdmin ? (
+        <Dialog open={open !== -1} onClose={() => setOpen(-1)}>
+          <DialogTitle id="alert-dialog-title">
+            Are you sure you want to delete this item?
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              {isDeleting ? <Spinner /> : "This will delete the item forever"}
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button disabled={isDeleting} onClick={() => setOpen(-1)}>
+              Close
+            </Button>
+            <Button
+              disabled={isDeleting}
+              color="error"
+              onClick={() => deleteItem(open)}
+            >
+              Delete
+            </Button>
+          </DialogActions>
+        </Dialog>
+      ) : null}
     </div>
   );
 };
