@@ -31,6 +31,7 @@ def get_menu_item(request,id):
     return JsonResponse(data, safe=False, status=200)
 
 @login_required
+@require_http_methods(['GET'])
 def whoami(request):
     return JsonResponse({"username": request.user.username, "is_admin": request.user.staff.is_admin})
 
