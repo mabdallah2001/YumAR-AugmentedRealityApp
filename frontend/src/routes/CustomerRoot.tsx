@@ -11,8 +11,6 @@ export interface ILoaderType {
 export const CustomerRoot: FC = () => {
   const { path, user } = useLoaderData() as ILoaderType;
 
-  console.log(user);
-
   return (
     <div className="App">
       <Outlet />

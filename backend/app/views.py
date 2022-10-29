@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 from django.http import JsonResponse, HttpResponse
 from .models import Category, Restaurant,MenuItem, Staff
 from django.core import serializers;
@@ -66,6 +66,13 @@ def log_in(request):
     login(request, user)
     return JsonResponse({"username": user.staff.username,
                          "is_admin": user.staff.is_admin}, status=200)
+
+@csrf_exempt
+@require_http_methods(['POST'])
+@login_required
+def log_out(request):
+    logout(request)
+    return JsonResponse({"msg": "logout"}, status=200)
 
 @csrf_exempt
 @require_http_methods(['POST'])

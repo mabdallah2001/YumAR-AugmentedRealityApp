@@ -1,5 +1,6 @@
 import { BottomNavigation, BottomNavigationAction, Paper } from "@mui/material";
 import { FC, useState } from "react";
+import { AiOutlineUser } from "react-icons/ai";
 import {
   MdRestaurantMenu,
   MdOutlineShoppingCart,
@@ -17,6 +18,8 @@ const mapIndexToRoute = (index: number, user: IUser, inStaff: boolean) => {
       return "/";
     case 1:
       return user === null ? "order" : "/staff/people";
+    case 2:
+      return user === null ? "/" : "/staff/profile";
   }
   return "";
 };
@@ -65,6 +68,9 @@ export const BottomMenu: FC<{
             icon={<MdOutlineAdminPanelSettings />}
           />
         )}
+        {user !== null ? (
+          <BottomNavigationAction label="Profile" icon={<AiOutlineUser />} />
+        ) : null}
       </BottomNavigation>
     </Paper>
   );

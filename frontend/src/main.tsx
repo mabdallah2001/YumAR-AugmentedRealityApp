@@ -40,6 +40,14 @@ const queryClient = new QueryClient({
 let user: IUser | null = null;
 let ranOnce = false;
 
+export const removeUser = () => {
+  user = null;
+};
+
+export const setRanOnce = (v: boolean) => {
+  ranOnce = v;
+};
+
 export interface IUser {
   username: string;
   is_admin: boolean;
@@ -114,6 +122,7 @@ const router = createBrowserRouter([
     children: [
       {
         loader: async () => {
+          console.log("hi");
           let response = await fetch("/api/v1/categories", { method: "GET" });
           if (!response.ok) {
             throw new Error("Could not retrieve menu items");
@@ -126,7 +135,7 @@ const router = createBrowserRouter([
       {
         path: "category/new",
         loader: () => {
-          if (user == null || !user.is_admin) return redirect("/staff");
+          if (user === null || !user.is_admin) return redirect("/staff");
           return user;
         },
         element: <NewCategoryPage />,
@@ -148,7 +157,7 @@ const router = createBrowserRouter([
       {
         path: "people",
         loader: async () => {
-          if (user == null || !user.is_admin) return redirect("/staff");
+          if (user === null || !user.is_admin) return redirect("/staff");
           let res = await axios.get("/api/v1/people");
           return res.data;
         },
@@ -157,7 +166,7 @@ const router = createBrowserRouter([
       {
         path: "people/add",
         loader: async () => {
-          if (user == null || !user.is_admin) return redirect("/staff");
+          if (user === null || !user.is_admin) return redirect("/staff");
           return user;
         },
         element: <AddPeoplePage />,
@@ -168,6 +177,10 @@ const router = createBrowserRouter([
       },
       {
         path: "profile",
+        loader: () => {
+          if (user === null) return redirect("/staff");
+          return user;
+        },
         element: <StaffProfilePage />,
       },
     ],
