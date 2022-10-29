@@ -19,7 +19,6 @@ import { EditItemDetailsPage } from "./routes/staff/item/[itemId]/edit";
 import { PeoplePage } from "./routes/staff/people";
 import { AddPeoplePage } from "./routes/staff/people/add";
 import { NewCategoryPage } from "./routes/staff/category/new";
-import { NewItemPage } from "./routes/staff/item/new";
 import { StaffOrdersPage } from "./routes/staff/orders";
 import { StaffProfilePage } from "./routes/staff/profile";
 import { Example } from "./routes/example";
