@@ -7,7 +7,9 @@ export const StaffRoot: FC = () => {
   const { path, user } = useLoaderData() as ILoaderType;
   return (
     <div className="App">
-      <Outlet context={{ user }} />
+      <div style={{ paddingBottom: "100px" }}>
+        <Outlet context={{ user }} />
+      </div>
       <BottomMenu initialPath={path} user={user} inStaff={true} />
     </div>
   );

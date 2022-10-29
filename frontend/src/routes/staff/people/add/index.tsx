@@ -1,11 +1,14 @@
 import { LoadingButton } from "@mui/lab";
 import {
   Box,
+  FormControl,
   IconButton,
   InputAdornment,
   InputLabel,
+  MenuItem,
   OutlinedInput,
   Paper,
+  Select,
 } from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
@@ -18,6 +21,7 @@ export const AddPeoplePage: FC = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [isAdmin, setIsAdmin] = useState(1);
   const [showPassword, setShowPassword] = useState(false);
 
   const { isLoading, mutate } = useMutation<
@@ -95,6 +99,25 @@ export const AddPeoplePage: FC = () => {
               </InputAdornment>
             }
           />
+          <FormControl
+            fullWidth
+            style={{
+              width: "100%",
+              marginBottom: "10px",
+            }}
+          >
+            <InputLabel id="demo-simple-select-label">Level</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={isAdmin}
+              label="Age"
+              onChange={(e) => setIsAdmin(e.target.value as number)}
+            >
+              <MenuItem value={1}>Staff</MenuItem>
+              <MenuItem value={2}>Administrator</MenuItem>
+            </Select>
+          </FormControl>
           <LoadingButton
             loading={isLoading}
             variant="outlined"
@@ -106,7 +129,7 @@ export const AddPeoplePage: FC = () => {
                 });
                 return;
               }
-              mutate({ username, password, is_admin: false });
+              mutate({ username, password, is_admin: isAdmin === 2 });
             }}
           >
             REGISTER
