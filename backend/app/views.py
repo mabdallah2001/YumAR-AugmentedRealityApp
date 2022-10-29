@@ -69,6 +69,17 @@ def get_order_items(request, orderId):
     return JsonResponse(menuItems, safe=False, status=200)
 
 @csrf_exempt
+@login_required
+@require_http_methods(['POST'])
+def complete_order(request, orderId):
+    order = Order.objects.get(id=orderId, restaurant=request.user.staff.restaurant)
+    if (order == None):
+        return JsonResponse("Not found", safe=False, status=404)
+    order.is_completed = True
+    order.save()
+    return JsonResponse({"msg": "saved"}, safe=False, status=200)
+
+@csrf_exempt
 @require_http_methods(['POST'])
 def log_in(request):
     data = json.loads(request.body)
