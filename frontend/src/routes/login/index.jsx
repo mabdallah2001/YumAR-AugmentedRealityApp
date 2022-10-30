@@ -12,10 +12,11 @@ import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
+import { setRanOnce } from "../../main";
 
 export const LogInPage = () => {
-  const navigate = useNavigate();
+  const [navigate, setNavigate] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -25,13 +26,16 @@ export const LogInPage = () => {
     },
     {
       onSuccess: () => {
-        navigate("/staff");
+        setRanOnce(false);
+        setNavigate(true);
       },
       onError: () => {
         toast.error("Wrong username or password");
       },
     }
   );
+
+  if (navigate) return <Navigate to="/staff" />;
 
   return (
     <div

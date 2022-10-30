@@ -19,7 +19,6 @@ import { EditItemDetailsPage } from "./routes/staff/item/[itemId]/edit";
 import { PeoplePage } from "./routes/staff/people";
 import { AddPeoplePage } from "./routes/staff/people/add";
 import { NewCategoryPage } from "./routes/staff/category/new";
-import { NewItemPage } from "./routes/staff/item/new";
 import { StaffOrdersPage } from "./routes/staff/orders";
 import { StaffProfilePage } from "./routes/staff/profile";
 import { Example } from "./routes/example";
@@ -40,6 +39,14 @@ const queryClient = new QueryClient({
 
 let user: IUser | null = null;
 let ranOnce = false;
+
+export const removeUser = () => {
+  user = null;
+};
+
+export const setRanOnce = (v: boolean) => {
+  ranOnce = v;
+};
 
 export interface IUser {
   username: string;
@@ -68,6 +75,13 @@ const router = createBrowserRouter([
     children: [
       {
         path: "",
+        loader: async () => {
+          let response = await fetch("/api/v1/categories", { method: "GET" });
+          if (!response.ok) {
+            throw new Error("Could not retrieve menu items");
+          }
+          return await response.json();
+        },
         element: <CustomerHomePage />,
       },
       {
@@ -76,9 +90,9 @@ const router = createBrowserRouter([
       },
       {
         path: "/item/:itemId",
-        loader: async ({params}) => {
+        loader: async ({ params }) => {
           let res = await axios.get(`/api/v1/item/${params.itemId}`, {
-            params: { id: 2 }
+            params: { id: 2 },
           });
           return res.data;
         },
@@ -100,6 +114,7 @@ const router = createBrowserRouter([
     errorElement: <div>Error page</div>, // TODO: create proper error page
     loader: async ({ request }) => {
       if (ranOnce && user === null) return redirect("/login");
+      ranOnce = true;
       const url = new URL(request.url);
       try {
         user = (await axios.get("/api/v1/whoami")).data as IUser;
@@ -107,26 +122,38 @@ const router = createBrowserRouter([
           user,
           path: url.pathname,
         };
-      } catch {
+      } catch (e) {
         return redirect("/login");
       }
     },
-    // TODO: loader to check session
     children: [
       {
+        loader: async () => {
+          let response = await fetch("/api/v1/categories", { method: "GET" });
+          if (!response.ok) {
+            throw new Error("Could not retrieve menu items");
+          }
+          return await response.json();
+        },
         path: "",
         element: <StaffHomePage />,
       },
       {
         path: "category/new",
+        loader: () => {
+          if (user === null || !user.is_admin) return redirect("/staff");
+          return user;
+        },
         element: <NewCategoryPage />,
       },
       {
-        path: "item/new",
-        element: <NewItemPage />,
-      },
-      {
         path: "item/:itemId",
+        loader: async ({ params }) => {
+          let res = await axios.get(`/api/v1/item/${params.itemId}`, {
+            params: { id: 2 },
+          });
+          return res.data;
+        },
         element: <ItemDetailsPage />,
       },
       {
@@ -135,18 +162,36 @@ const router = createBrowserRouter([
       },
       {
         path: "people",
+        loader: async () => {
+          if (user === null || !user.is_admin) return redirect("/staff");
+          let res = await axios.get("/api/v1/people");
+          return res.data;
+        },
         element: <PeoplePage />,
       },
       {
         path: "people/add",
+        loader: async () => {
+          if (user === null || !user.is_admin) return redirect("/staff");
+          return user;
+        },
         element: <AddPeoplePage />,
       },
       {
         path: "orders",
+        loader: async () => {
+          if (user === null) return redirect("/staff");
+          let res = await axios.get("/api/v1/orders");
+          return res.data;
+        },
         element: <StaffOrdersPage />,
       },
       {
         path: "profile",
+        loader: () => {
+          if (user === null) return redirect("/staff");
+          return user;
+        },
         element: <StaffProfilePage />,
       },
     ],
