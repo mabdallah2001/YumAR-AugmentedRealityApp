@@ -12,24 +12,10 @@ import { useLoaderData } from "react-router";
 
 export const ItemDetailsPage = () => {
   const data = useLoaderData();
-  // const { data, isLoading, isError } = useQuery(["ItemDetailsPage"], async () => {
-  //   let res = await axios.get("/api/v1/item/", {
-  //     params: { id: 2 }
-  //   });
-  //   return res.data;
-  // });
-
-  // if (isLoading) return <div>Loading...</div>;
-
-  // if (isError) return <div>Some error when requesting the information</div>;
-
-  var url = window.location.pathname;
-  url = url + "/ar";
 
   return (
     <div>
       {data.map((menuItem) => {
-        console.log(menuItem);
         return (
           <Card
             key={`item-${menuItem.id}`}
@@ -43,9 +29,12 @@ export const ItemDetailsPage = () => {
               <Typography variant="body1">${menuItem.price}</Typography>
             </CardContent>
             <CardActions>
-              <Link to={url}>
-                <Button size="medium">View AR Model</Button>
-              </Link>
+              <a
+                href={`https://szaldivar.github.io/ar_yumar/?p=${menuItem.link_3d_model}`}
+                target="_blank"
+              >
+                View in AR
+              </a>
             </CardActions>
           </Card>
         );
