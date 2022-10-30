@@ -64,6 +64,7 @@ export const clearOrder = () => {
   localStorage.setItem("order", JSON.stringify([...order.values()]));
 };
 export const getOrder = () => order;
+export const getOrderCopy = () => new Set([...order.values()]);
 export const getOrderArray = () => [...order.values()];
 
 export const removeUser = () => {

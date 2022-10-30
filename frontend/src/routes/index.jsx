@@ -10,10 +10,12 @@ import { useLoaderData, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { MdExpandMore } from "react-icons/md";
 import { Spinner } from "../components/Spinner";
-import { addToOrder } from "../main";
+import { addToOrder, deleteFromOrder, getOrderCopy } from "../main";
 import axios from "axios";
+import { useState } from "react";
 
 const MenuCategory = ({ id, name }) => {
+  const [orderFilter, setOrderFilter] = useState(() => getOrderCopy());
   const { data, isLoading, isError } = useQuery(
     [`category-${id}`],
     async () => {
@@ -46,13 +48,26 @@ const MenuCategory = ({ id, name }) => {
                   <h4>
                     <Link to={`item/${menuItem.id}`}>See Item Details</Link>
                   </h4>
-                  <Button
-                    onClick={() => {
-                      addToOrder(menuItem.id);
-                    }}
-                  >
-                    Add to order
-                  </Button>
+                  {orderFilter.has(menuItem.id) ? (
+                    <Button
+                      color="error"
+                      onClick={() => {
+                        deleteFromOrder(menuItem.id);
+                        setOrderFilter(getOrderCopy());
+                      }}
+                    >
+                      Remove from order
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={() => {
+                        addToOrder(menuItem.id);
+                        setOrderFilter(getOrderCopy());
+                      }}
+                    >
+                      Add to order
+                    </Button>
+                  )}
                 </Card>
               ))}
             </>
