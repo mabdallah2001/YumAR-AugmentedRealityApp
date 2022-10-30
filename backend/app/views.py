@@ -10,9 +10,10 @@ from django.http import JsonResponse, HttpResponse
 from .models import Category, Order, Restaurant,MenuItem, Staff
 from django.core import serializers;
 from django.contrib.auth.models import User
-
-from .models import Restaurant, MenuItem
 from django.contrib.auth.backends import ModelBackend
+import uuid
+from datetime import datetime
+
 
 # Create your views here.
 
@@ -90,6 +91,32 @@ def log_in(request):
     login(request, user)
     return JsonResponse({"username": user.staff.username,
                          "is_admin": user.staff.is_admin}, status=200)
+
+@csrf_exempt
+@require_http_methods(['POST'])
+def addOrder(request):
+    data = json.loads(request.body)
+
+    totalPrice = 0
+    menuList = []
+    restaurant = Restaurant.objects.get(id=1)
+    menuIDs = data["menu-items"]
+    for menuID in menuIDs:
+        item = MenuItem.objects.get(id=menuID)
+        totalPrice += item.price
+        menuList.append(item)
+    if (len(menuList) == 0):
+        return JsonResponse("No items found in the order", safe=False, status=400)
+
+    order = Order.objects.create( 
+    order_number = uuid.uuid4(),
+    time_created = datetime.now(),
+    total = totalPrice,
+    is_completed = False,
+    restaurant = restaurant
+    )
+    order.menu_items.set(menuList)
+    return JsonResponse({"msg": "ok"}, status=200)
 
 @csrf_exempt
 @require_http_methods(['POST'])
