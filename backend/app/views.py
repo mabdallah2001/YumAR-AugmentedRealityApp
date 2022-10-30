@@ -27,6 +27,7 @@ def example_route(request):
     data = list(Restaurant.objects.values())
     return JsonResponse(data, safe=False, status=200)
 
+@require_http_methods(['GET'])
 def get_menu_item(request,id):
     data = list(MenuItem.objects.filter(id=id).values())
     print (data)
@@ -116,7 +117,7 @@ def addOrder(request):
     )
     order.menu_items.set(menuList)
     return JsonResponse({"msg": "ok"}, status=200)
-    
+
 @csrf_exempt
 @require_http_methods(['POST'])
 @login_required
