@@ -40,6 +40,33 @@ const queryClient = new QueryClient({
 let user: IUser | null = null;
 let ranOnce = false;
 
+let order: Set<number>;
+export const orderFromLocal = () => {
+  let cachedOrder = localStorage.getItem("order");
+  if (cachedOrder === null) {
+    order = new Set();
+    return;
+  }
+  order = new Set(JSON.parse(cachedOrder));
+};
+orderFromLocal();
+export const addToOrder = (id: number) => {
+  order.add(id);
+  localStorage.setItem("order", JSON.stringify([...order.values()]));
+};
+export const checkInOrder = (id: number) => order.has(id);
+export const deleteFromOrder = (id: number) => {
+  if (order.delete(id))
+    localStorage.setItem("order", JSON.stringify([...order.values()]));
+};
+export const clearOrder = () => {
+  order = new Set();
+  localStorage.setItem("order", JSON.stringify([...order.values()]));
+};
+export const getOrder = () => order;
+export const getOrderCopy = () => new Set([...order.values()]);
+export const getOrderArray = () => [...order.values()];
+
 export const removeUser = () => {
   user = null;
 };
@@ -86,6 +113,9 @@ const router = createBrowserRouter([
       },
       {
         path: "order",
+        loader: () => {
+          return getOrder();
+        },
         element: <OrderPage />,
       },
       {
