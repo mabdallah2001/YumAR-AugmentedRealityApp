@@ -63,6 +63,8 @@ export const clearOrder = () => {
   order = new Set();
   localStorage.setItem("order", JSON.stringify([...order.values()]));
 };
+export const getOrder = () => order;
+export const getOrderArray = () => [...order.values()];
 
 export const removeUser = () => {
   user = null;
@@ -110,6 +112,9 @@ const router = createBrowserRouter([
       },
       {
         path: "order",
+        loader: () => {
+          return getOrder();
+        },
         element: <OrderPage />,
       },
       {

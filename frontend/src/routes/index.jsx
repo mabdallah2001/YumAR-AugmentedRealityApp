@@ -10,6 +10,7 @@ import { useLoaderData, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { MdExpandMore } from "react-icons/md";
 import { Spinner } from "../components/Spinner";
+import { addToOrder } from "../main";
 import axios from "axios";
 
 const MenuCategory = ({ id, name }) => {
@@ -45,6 +46,13 @@ const MenuCategory = ({ id, name }) => {
                   <h4>
                     <Link to={`item/${menuItem.id}`}>See Item Details</Link>
                   </h4>
+                  <Button
+                    onClick={() => {
+                      addToOrder(menuItem.id);
+                    }}
+                  >
+                    Add to order
+                  </Button>
                 </Card>
               ))}
             </>
